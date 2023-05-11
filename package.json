@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "twitch-js": "^2.0.0-beta.45"
+  },
+  "name": "streamermultitool",
+  "version": "1.0.0",
+  "main": "background.js",
+  "devDependencies": {
+    "eslint": "^8.40.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Fuzzy",
+  "license": "ISC",
+  "description": "A Mutlitool for streamers."
+}
