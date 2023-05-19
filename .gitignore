@@ -3296,3 +3296,15 @@ node_modules/.bin/eslint
 node_modules/.bin/acorn.ps1
 node_modules/.bin/acorn.cmd
 node_modules/.bin/acorn
+node_modules/ws/lib/validation.js
+node_modules/ws/lib/validation.js
+node_modules/ws/lib/websocket-server.js
+node_modules/ws/lib/websocket.js
+node_modules/ws/LICENSE
+node_modules/ws/package.json
+node_modules/ws/README.md
+node_modules/yocto-queue/index.d.ts
+node_modules/yocto-queue/index.js
+node_modules/yocto-queue/license
+node_modules/yocto-queue/package.json
+node_modules/yocto-queue/readme.md
