@@ -39,12 +39,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
       if (preferences.darkMode) {
         document.getElementById('theme-style').href = 'dark.css';
         themeToggle.checked = true;
+      } else {
+        document.getElementById('theme-style').href = 'light.css';
+        themeToggle.checked = false;
       }
 
       // Load feature preferences
       for (let feature in preferences) {
         if (preferences[feature].enabled) {
           features[feature].toggle.checked = true;
+        } else {
+          features[feature].toggle.checked = false;
         }
 
         for (let option in preferences[feature].options) {
@@ -101,11 +106,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
   // Twitch login button element
   const loginButton = document.getElementById('loginButton');
 
-  // Send messageto background script to initiate Twitch login process when loginButton is clicked
-
-loginButton.addEventListener('click', () => {
-  chrome.runtime.sendMessage({type: 'initiateOAuth'});
-});
+  // Send message to background script to initiate Twitch login process when loginButton is clicked
+  loginButton.addEventListener('click', () => {
+    chrome.runtime.sendMessage({type: 'initiateOAuth'});
+  });
 
   // Add event listeners for feature toggles and buttons
   for (let feature in features) {
@@ -125,40 +129,40 @@ loginButton.addEventListener('click', () => {
         let input = features[feature][option];
         if(input){
           input.addEventListener('input', savePreferences);  // Save the preferences after a change
+       
         }
       }
     }
   }
+
   // In popup.js, after the page loads
-chrome.storage.sync.get(['accessToken'], function(data) {
-  if (chrome.runtime.lastError) {
-    console.error('Error loading access token:', chrome.runtime.lastError);
-    return;
-  }
+  chrome.storage.sync.get(['accessToken'], function(data) {
+    if (chrome.runtime.lastError) {
+      console.error('Error loading access token:', chrome.runtime.lastError);
+      return;
+    }
 
-  if (data.accessToken) {
-    // If access token exists, user is logged in
-    loginButton.style.display = 'none';
-    // Display a logout button or a message to indicate user is logged in, for example:
-    let logoutButton = document.createElement('button');
-    logoutButton.innerText = 'Logout';
-    document.getElementById('twitchAuth').appendChild(logoutButton);
+    if (data.accessToken) {
+      // If access token exists, user is logged in
+      loginButton.style.display = 'none';
+      // Display a logout button or a message to indicate user is logged in, for example:
+      let logoutButton = document.createElement('button');
+      logoutButton.innerText = 'Logout';
+      document.getElementById('twitchAuth').appendChild(logoutButton);
 
-    logoutButton.addEventListener('click', () => {
-      // Remove access token from storage to logout
-      chrome.storage.sync.remove('accessToken', function() {
-        // eslint-disable-next-line no-undef
-        if (chrome.runtime.lastError) {
-          // eslint-disable-next-line no-undef
-          console.error('Error removing access token:', chrome.runtime.lastError);
-        } else {
-          // Update UI to reflect logout status
-          logoutButton.style.display = 'none';
-          loginButton.style.display = 'block';
-        }
+      logoutButton.addEventListener('click', () => {
+        // Remove access token from storage to logout
+        chrome.storage.sync.remove('accessToken', function() {
+          if (chrome.runtime.lastError) {
+            console.error('Error removing access token:', chrome.runtime.lastError);
+          } else {
+            // Update UI to reflect logout status
+            logoutButton.style.display = 'none';
+            loginButton.style.display = 'block';
+          }
+        });
       });
-    });
-  }
+    }
+  });
 });
 
-});

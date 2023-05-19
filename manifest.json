@@ -57,13 +57,6 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "oauth2": {
-    "client_id": "0q1q1q1q1q1q1q1q1q1q1q1q1q1q1q1",
-    "scopes": [
-      "openid",
-      "user:read:email"
-    ]
-  },
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {

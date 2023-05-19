@@ -7,10 +7,6 @@ import './twitchChatHandler.js';
 // Initialize Perspective API client
 const perspective = new Perspective({ apiKey: 'YOUR_PERSPECTIVE_API_KEY' });
 
-// Variables for Twitch API
-let twitchClientID = 'YOUR_TWITCH_CLIENT_ID';
-let twitchAccessToken = 'YOUR_TWITCH_ACCESS_TOKEN';
-
 // Variables for Netlify API
 let netlifyAPIKey = 'YOUR_NETLIFY_API_KEY';
 
