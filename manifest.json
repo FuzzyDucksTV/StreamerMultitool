@@ -3,7 +3,7 @@
   "name": "StreamMatey",
   "version": "1.0",
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "options.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -27,28 +27,28 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["popup.html", "popup.js", "sentiment.html", "twitchChatHandler.js"],
+      "resources": ["options.html", "options.js", "sentiment.html", "twitchChatHandler.js"],
       "matches": ["<all_urls>"],
       "use_dynamic_url": false
     },
     {
-      "resources": ["popup.css", "sentiment.css"],
-      "matches": ["<all_urls>"],
+      "resources": ["light.css", "sentiment.css", "dark.css"],
+      "matches": ["<all_urls>", "https://api.netlify.com/*"],
       "use_dynamic_url": false
     },
     {
       "resources": ["icons/icon16.png"],
-      "matches": ["<all_urls>"],
+      "matches": ["<all_urls>", "https://api.netlify.com/*"],
       "use_dynamic_url": false
     },
     {
       "resources": ["icons/icon48.png"],
-      "matches": ["<all_urls>"],
+      "matches": ["<all_urls>", "https://api.netlify.com/*"],
       "use_dynamic_url": false
     },
     {
       "resources": ["icons/icon128.png"],
-      "matches": ["<all_urls>"],
+      "matches": ["<all_urls>", "https://api.netlify.com/*"],
       "use_dynamic_url":       false
     }
   ],
@@ -66,7 +66,7 @@
     }
   },
   "options_ui": {
-    "page": "popup.html",
+    "page": "options.html",
     "open_in_tab": true
   }
 }
