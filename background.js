@@ -67,3 +67,55 @@ fetchAPIKeys();
 
 // Monitor Twitch chat when the extension is loaded
 monitorTwitchChat();
+
+const WebSocket = require('ws');
+
+class TwitchChat {
+  constructor() {
+    this.ws = null;
+    this.reconnectInterval = 1000; // start with 1 second
+    this.maxReconnectInterval = 60000; // max of 1 minute
+  }
+
+  connect() {
+    this.ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+
+    this.ws.on('open', () => {
+      console.log('Connected to Twitch IRC');
+      this.ws.send('PASS oauth:your_oauth_token');
+      this.ws.send('NICK your_bot_username');
+      this.ws.send('JOIN #channel_to_join(this can be dynamically fetched to use the same channel as the users channel they are streaming to.');
+      this.reconnectInterval = 1000; // reset reconnect interval on successful connection
+    });
+
+    this.ws.on('message', (data) => {
+      console.log(data);
+      if (data.startsWith('PING')) {
+        this.ws.send('PONG :tmi.twitch.tv');
+      }
+    });
+
+    this.ws.on('error', (err) => {
+      console.error('WebSocket error observed:', err);
+    });
+
+    this.ws.on('close', (code, reason) => {
+      console.log(`WebSocket connection closed: ${code} ${reason}`);
+      this.reconnect();
+    });
+  }
+
+  reconnect() {
+    console.log(`Attempting to reconnect in ${this.reconnectInterval / 1000} seconds...`);
+    setTimeout(() => {
+      this.connect();
+      this.reconnectInterval *= 2;
+      if (this.reconnectInterval > this.maxReconnectInterval) {
+        this.reconnectInterval = this.maxReconnectInterval;
+      }
+    }, this.reconnectInterval);
+  }
+}
+
+const twitchChat = new TwitchChat();
+twitchChat.connect();

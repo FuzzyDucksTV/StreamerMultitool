@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Twitch Chat Sentiment Analysis",
+  "name": "StreamMatey",
   "version": "1.0",
   "action": {
     "default_popup": "popup.html",
@@ -19,19 +19,20 @@
   ],
   "host_permissions": [
     "https://api.twitch.tv/*",
-    "https://api-inference.huggingface.co/*"
+    "https://api-inference.huggingface.co/*",
+    "https://api.netlify.com/*"
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
   "web_accessible_resources": [
     {
-      "resources": ["popup.html", "popup.js"],
+      "resources": ["popup.html", "popup.js", "sentiment.html", "twitchChatHandler.js"],
       "matches": ["<all_urls>"],
       "use_dynamic_url": false
     },
     {
-      "resources": ["popup.css"],
+      "resources": ["popup.css", "sentiment.css"],
       "matches": ["<all_urls>"],
       "use_dynamic_url": false
     },
@@ -48,9 +49,8 @@
     {
       "resources": ["icons/icon128.png"],
       "matches": ["<all_urls>"],
-      "use_dynamic_url": false
+      "use_dynamic_url":       false
     }
-     
   ],
   "icons": {
     "16": "icons/icon16.png",
@@ -66,26 +66,8 @@
     }
   },
   "options_ui": {
-    "page": "options.html",
+    "page": "popup.html",
     "open_in_tab": true
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }
-  ],
-  "chrome_url_overrides": {
-    "newtab": "popup.html"
-  },
-  "chrome_settings_overrides": {
-    "search_provider": {
-      "name": "Twitch Chat Sentiment Analysis",
-      "keyword": "twitch",
-      "search_url": "https://www.twitch.tv/directory/game/Just%20Chatting",
-      "favicon_url": "https://www.twitch.tv/favicon.ico",
-      "encoding": "UTF-8",
-      "is_default": true
-    }
   }
 }
+
