@@ -2,7 +2,7 @@
 const axios = require('axios');
 
 // Variables for Netlify API
-let netlifyAPIKey = 'YOUR_NETLIFY_API_KEY';
+let netlifyAPIKey = process.env.NETLIFY_API_KEY;
 
 // Function to fetch API keys from Netlify
 async function fetchAPIKeys() {
