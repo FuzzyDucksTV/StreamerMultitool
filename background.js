@@ -1,16 +1,13 @@
 // Import required modules
-const Perspective = require('perspective-api-client');
-const axios = require('axios');
+import Perspective from 'perspective-api-client';
+import axios from 'axios';
 import './twitchChatHandler.js';
 
-
 // Initialize Perspective API client
-const perspective = new Perspective({ apiKey: 'YOUR_PERSPECTIVE_API_KEY' });
+const perspective = new Perspective({ apiKey: process.env.PERSPECTIVE_API_KEY });
 
 // Variables for Netlify API
-let netlifyAPIKey = 'YOUR_NETLIFY_API_KEY';
-
-
+let netlifyAPIKey = process.env.NETLIFY_API_KEY;
 
 // Function to fetch API keys from Netlify
 async function fetchAPIKeys() {
@@ -24,29 +21,30 @@ async function fetchAPIKeys() {
         twitchAccessToken = response.data.twitchAccessToken;
     } catch (error) {
         console.error('Error fetching API keys from Netlify:', error);
+        displayError('Error fetching API keys from Netlify: ' + error.message);
     }
 }
 
 // Function to display error messages
 function displayError(message) {
-  chrome.runtime.sendMessage({ type: 'error', message: message });
+    chrome.runtime.sendMessage({ type: 'error', message: message });
 }
 
 // Fetch API keys when the extension is loaded
 fetchAPIKeys().catch(error => {
-  console.error('Error fetching API keys from Netlify:', error);
-  displayError('Error fetching API keys from Netlify: ' + error.message);
+    console.error('Error fetching API keys from Netlify:', error);
+    displayError('Error fetching API keys from Netlify: ' + error.message);
 });
 
 // Function to analyze sentiment of a message
 async function analyzeSentiment(message) {
-  try {
-      const result = await perspective.analyze({ text: message });
-      return result.attributeScores.TOXICITY.summaryScore.value;
-  } catch (error) {
-      console.error('Error analyzing sentiment:', error);
-      displayError('Error analyzing sentiment: ' + error.message);
-  }
+    try {
+        const result = await perspective.analyze({ text: message });
+        return result.attributeScores.TOXICITY.summaryScore.value;
+    } catch (error) {
+        console.error('Error analyzing sentiment:', error);
+        displayError('Error analyzing sentiment: ' + error.message);
+    }
 }
 
 // Function to handle Twitch chat messages
