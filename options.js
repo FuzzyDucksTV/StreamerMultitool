@@ -22,12 +22,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
   // Dark mode toggle element
   const themeToggle = document.getElementById('themeToggle');
 
-  // Load preferences from storage
-  chrome.storage.sync.get(['preferences'], function(data) {
-    if (chrome.runtime.lastError) {
+
+
+  // Function to display error messages
+function displayError(message) {
+  const errorMessageElement = document.getElementById('error-message');
+  errorMessageElement.textContent = message;
+  errorMessageElement.style.display = 'block';
+}
+
+// Load preferences from storage
+chrome.storage.sync.get(['preferences'], function(data) {
+  if (chrome.runtime.lastError) {
       console.error('Error loading preferences:', chrome.runtime.lastError);
+      displayError('Error loading preferences: ' + chrome.runtime.lastError.message);
       return;
-    }
+  }
     const preferences = data.preferences;
 
     if (preferences) {
@@ -89,10 +99,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     chrome.storage.sync.set({ preferences }, function() {
       if (chrome.runtime.lastError) {
-        console.error('Error saving preferences:', chrome.runtime.lastError);
+          console.error('Error saving preferences:', chrome.runtime.lastError);
+          displayError('Error saving preferences: ' + chrome.runtime.lastError.message);
       }
-    });
-  }
+  });
+}
 
   // Toggle theme when themeToggle is clicked
   themeToggle.addEventListener('change', () => {
