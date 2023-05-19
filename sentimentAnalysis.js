@@ -1,62 +1,42 @@
-// Get DOM elements
-const sentimentWindow = document.getElementById('sentiment-window');
-const gigerMeterBar = document.getElementById('giger-meter-bar');
-const sentimentScoreElement = document.getElementById('sentiment-score');
+// Get HTML elements
+const sentimentWindow = document.getElementById('sentimentWindow');
+const gigerMeter = document.getElementById('gigerMeter');
+const sentimentScore = document.getElementById('sentimentScore');
+const errorDiv = document.getElementById('errorDiv'); // New div for displaying error messages
 
-let sentimentScore = 0;
-
-// Function to update the Giger-Meter
+// Function to update Giger-Meter
 function updateGigerMeter(score) {
-    gigerMeterBar.style.width = `${score}%`;
-    sentimentScoreElement.innerText = score.toFixed(2);
+  gigerMeter.style.width = `${score * 100}%`;
+  sentimentScore.textContent = `Sentiment: ${score.toFixed(2)}`;
 }
 
-// Function to handle received messages from the background script
+// Function to handle received message
 function handleReceivedMessage(message) {
-    try {
-        if (message.type === 'sentimentScoreUpdate') {
-            sentimentScore = message.score;
-            updateGigerMeter(sentimentScore);
-        } else if (message.type === 'error') {
-            sentimentWindow.innerHTML = `<p>Error: ${message.error}</p>`;
-        }
-    } catch (error) {
-        console.error(`Error handling received message: ${error}`);
-        // TODO: Display this error message to the user
-    }
+  if (message.type === 'sentimentScoreUpdate') {
+    updateGigerMeter(message.score);
+  } else if (message.type === 'error') {
+    errorDiv.textContent = message.error; // Display error message in the errorDiv
+  }
 }
 
-// Listener for messages from the background script
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    handleReceivedMessage(message);
-});
+// Set up listener for messages from background script
+chrome.runtime.onMessage.addListener(handleReceivedMessage);
 
-// Function to send a message to the background script
+// Function to send message
 function sendMessage(message) {
-    try {
-        chrome.runtime.sendMessage(message);
-    } catch (error) {
-        console.error(`Error sending message: ${error}`);
-        // TODO: Display this error message to the user
+  chrome.runtime.sendMessage(message, function(response) {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
     }
+  });
 }
 
-// Function to score a message
+// Function to score message
 function scoreMessage(message) {
-    try {
-        sendMessage({ type: 'scoreMessage', message: message });
-    } catch (error) {
-        console.error(`Error scoring message: ${error}`);
-        // TODO: Display this error message to the user
-    }
+  sendMessage({type: 'scoreMessage', message: message});
 }
 
-// Function to handle a new Twitch chat message
+// Function to handle chat message
 function handleChatMessage(message) {
-    try {
-        scoreMessage(message);
-    } catch (error) {
-        console.error(`Error handling chat message: ${error}`);
-        // TODO: Display this error message to the user
-    }
+  scoreMessage(message);
 }

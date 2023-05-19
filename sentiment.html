@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="sentiment.css">
+  <title>Sentiment and Toxicity Analysis</title>
+  <style>
+    /* Add your CSS styles here */
+  </style>
 </head>
 <body>
-    <div id="sentiment-window">
-        <h1>Sentiment Analysis</h1>
-        <div id="giger-meter">
-            <div id="giger-meter-bar"></div>
-        </div>
-        <div id="sentiment-score">0</div>
-    </div>
-    <script src="sentimentAnalysis.js"></script>
+  <div id="sentimentWindow">
+    <div id="gigerMeter"></div>
+    <div id="sentimentScore"></div>
+  </div>
+  <div id="toxicityWindow">
+    <div id="toxicityMeter"></div>
+    <div id="toxicityScore"></div>
+  </div>
+  <div id="errorDiv"></div> <!-- New div for displaying error messages -->
+  <script src="sentimentAnalysis.js"></script>
+  <script src="toxicity-detection.js"></script>
 </body>
 </html>

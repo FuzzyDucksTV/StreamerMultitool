@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   const features = {
     sentiment: {
       toggle: document.getElementById('sentimentToggle'),
-      button: document.getElementById('sentimentButton'),
-      options: document.getElementById('sentimentOptions'),
       sensitivity: document.getElementById('sentimentSensitivity'),
       sensitivityValue: document.getElementById('sentimentSensitivityValue'),
       showTopScorers: document.getElementById('showTopScorers'),
@@ -13,8 +11,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     },
     toxicity: {
       toggle: document.getElementById('toxicityToggle'),
-      button: document.getElementById('toxicityButton'),
-      options: document.getElementById('toxicityOptions'),
       message: document.getElementById('toxicityMessage'),
       modNotification: document.getElementById('toxicityModNotification'),
       selfNotification: document.getElementById('toxicitySelfNotification'),
@@ -37,10 +33,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     if (preferences) {
       // Apply theme
       if (preferences.darkMode) {
-        document.getElementById('theme-style').href = 'dark.css';
+        document.body.classList.add('dark');
         themeToggle.checked = true;
       } else {
-        document.getElementById('theme-style').href = 'light.css';
+        document.body.classList.remove('dark');
         themeToggle.checked = false;
       }
 
@@ -56,8 +52,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
           let input = features[feature][option];
           if (input.type === 'checkbox') {
             input.checked = preferences[feature].options[option];
-          } else if (input.type === 'select-one') {
+          } else if (input.type === 'range') {
             input.value = preferences[feature].options[option];
+            features[feature].sensitivityValue.textContent = input.value;
           } else {
             input.value = preferences[feature].options[option];
           }
@@ -79,7 +76,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       };
 
       for (let option in features[feature]) {
-        if (option !== 'toggle' && option !== 'button' && option !== 'options') {
+        if (option !== 'toggle') {
           let input = features[feature][option];
           if (input.type === 'checkbox') {
             preferences[feature].options[option] = input.checked;
@@ -99,7 +96,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   // Toggle theme when themeToggle is clicked
   themeToggle.addEventListener('change', () => {
-    document.getElementById('theme-style').href = themeToggle.checked ? 'dark.css' : 'light.css';
+    if (themeToggle.checked) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
     savePreferences();
   });
 
@@ -111,25 +112,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
     chrome.runtime.sendMessage({type: 'initiateOAuth'});
   });
 
-  // Add event listeners for feature toggles and buttons
+  // Add event listeners for feature toggles
   for (let feature in features) {
-    // Toggle feature options when feature button is clicked
-    features[feature].button.addEventListener('click', () => {
-      let display = features[feature].options.style.display;
-      features[feature].options.style.display = (display === 'block') ? 'none' : 'block';
-      savePreferences();  // Save the preferences after a change
-    });
-
     // Save preferences when feature toggle is clicked
     features[feature].toggle.addEventListener('change', savePreferences);
 
     // Add event listeners for feature options
     for (let option in features[feature]) {
-      if (option !== 'toggle' && option !== 'button' && option !== 'options') {
+      if (option !== 'toggle') {
         let input = features[feature][option];
         if(input){
-          input.addEventListener('input', savePreferences);  // Save the preferences after a change
-       
+          input.addEventListener('input', function() {
+            if (input.type === 'range') {
+              features[feature].sensitivityValue.textContent = input.value;
+            }
+            savePreferences();  // Save the preferences after a change
+          });
         }
       }
     }
@@ -163,4 +161,3 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
   });
 });
-
