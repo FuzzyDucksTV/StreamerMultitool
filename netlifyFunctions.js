@@ -15,6 +15,7 @@ async function fetchAPIKeys() {
     return response.data;
   } catch (error) {
     console.error('Error fetching API keys from Netlify:', error);
+    throw error; // Throw the error after logging it
   }
 }
 
