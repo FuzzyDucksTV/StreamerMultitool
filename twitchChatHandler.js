@@ -37,19 +37,30 @@ async function getCurrentChannel(token, clientId) {
   }
 }
 
+// Function to display error messages
+function displayError(message) {
+  chrome.runtime.sendMessage({ type: 'error', message: message });
+}
+
+// Fetch API keys when the script is loaded
+fetchAPIKeys().catch(error => {
+  console.error('Error fetching API keys from Netlify:', error);
+  displayError('Error fetching API keys from Netlify: ' + error.message);
+});
+
 // Function to handle Twitch chat messages
 function handleChatMessage(channel, userstate, message, self) {
-    // Ignore messages from the bot itself
-    if (self) return;
-  
-    // Send the message to the background script for analysis
-    try {
+  // Ignore messages from the bot itself
+  if (self) return;
+
+  // Send the message to the background script for analysis
+  try {
       chrome.runtime.sendMessage({ type: 'analyzeMessage', message: message });
-    } catch (error) {
+  } catch (error) {
       console.error('Error sending message to background script:', error);
-      // TODO: Display this error message to the user
-    }
+      displayError('Error sending message to background script: ' + error.message);
   }
+}
   
   // Function to monitor Twitch chat in real-time
   async function monitorTwitchChat() {

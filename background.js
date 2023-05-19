@@ -10,6 +10,8 @@ const perspective = new Perspective({ apiKey: 'YOUR_PERSPECTIVE_API_KEY' });
 // Variables for Netlify API
 let netlifyAPIKey = 'YOUR_NETLIFY_API_KEY';
 
+
+
 // Function to fetch API keys from Netlify
 async function fetchAPIKeys() {
     try {
@@ -25,14 +27,26 @@ async function fetchAPIKeys() {
     }
 }
 
+// Function to display error messages
+function displayError(message) {
+  chrome.runtime.sendMessage({ type: 'error', message: message });
+}
+
+// Fetch API keys when the extension is loaded
+fetchAPIKeys().catch(error => {
+  console.error('Error fetching API keys from Netlify:', error);
+  displayError('Error fetching API keys from Netlify: ' + error.message);
+});
+
 // Function to analyze sentiment of a message
 async function analyzeSentiment(message) {
-    try {
-        const result = await perspective.analyze({ text: message });
-        return result.attributeScores.TOXICITY.summaryScore.value;
-    } catch (error) {
-        console.error('Error analyzing sentiment:', error);
-    }
+  try {
+      const result = await perspective.analyze({ text: message });
+      return result.attributeScores.TOXICITY.summaryScore.value;
+  } catch (error) {
+      console.error('Error analyzing sentiment:', error);
+      displayError('Error analyzing sentiment: ' + error.message);
+  }
 }
 
 // Function to handle Twitch chat messages
