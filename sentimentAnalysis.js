@@ -22,6 +22,7 @@ function handleReceivedMessage(message) {
         }
     } catch (error) {
         console.error(`Error handling received message: ${error}`);
+        // TODO: Display this error message to the user
     }
 }
 
@@ -36,6 +37,7 @@ function sendMessage(message) {
         chrome.runtime.sendMessage(message);
     } catch (error) {
         console.error(`Error sending message: ${error}`);
+        // TODO: Display this error message to the user
     }
 }
 
@@ -45,6 +47,7 @@ function scoreMessage(message) {
         sendMessage({ type: 'scoreMessage', message: message });
     } catch (error) {
         console.error(`Error scoring message: ${error}`);
+        // TODO: Display this error message to the user
     }
 }
 
@@ -54,5 +57,6 @@ function handleChatMessage(message) {
         scoreMessage(message);
     } catch (error) {
         console.error(`Error handling chat message: ${error}`);
+        // TODO: Display this error message to the user
     }
 }

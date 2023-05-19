@@ -151,17 +151,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
       document.getElementById('twitchAuth').appendChild(logoutButton);
 
       logoutButton.addEventListener('click', () => {
-        // Remove access token from storage to logout
         chrome.storage.sync.remove('accessToken', function() {
-          if (chrome.runtime.lastError) {
-            console.error('Error removing access token:', chrome.runtime.lastError);
-          } else {
-            // Update UI to reflect logout status
-            logoutButton.style.display = 'none';
-            loginButton.style.display = 'block';
-          }
+            if (chrome.runtime.lastError) {
+                console.error('Error removing access token:', chrome.runtime.lastError);
+            } else {
+                // Refresh the popup window to reflect the logout
+                window.location.reload();
+            }
         });
-      });
+    });
     }
   });
 });

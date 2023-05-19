@@ -8,6 +8,7 @@ function handleChatMessage(message) {
         chrome.runtime.sendMessage({ type: 'analyzeMessage', message: message });
     } catch (error) {
         console.error(`Error handling chat message: ${error}`);
+        // TODO: Display this error message to the user
     }
 }
 
@@ -23,6 +24,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         }
     } catch (error) {
         console.error(`Error handling received message: ${error}`);
+        // TODO: Display this error message to the user
     }
 });
 
@@ -37,19 +39,21 @@ function updateSentimentUI(score) {
         sentimentScoreElement.innerText = score.toFixed(2);
     } catch (error) {
         console.error(`Error updating sentiment UI: ${error}`);
+        // TODO: Display this error message to the user
     }
 }
 
 // Function to update the toxicity detection UI
 function updateToxicityUI(score) {
-  try {
-      const toxicityWindow = document.getElementById('toxicity-window');
-      const toxicityMeterBar = document.getElementById('toxicity-meter-bar');
-      const toxicityScoreElement = document.getElementById('toxicity-score');
+    try {
+        const toxicityWindow = document.getElementById('toxicity-window');
+        const toxicityMeterBar = document.getElementById('toxicity-meter-bar');
+        const toxicityScoreElement = document.getElementById('toxicity-score');
 
-      toxicityMeterBar.style.width = `${score}%`;
-      toxicityScoreElement.innerText = score.toFixed(2);
-  } catch (error) {
-      console.error(`Error updating toxicity UI: ${error}`);
-  }
+        toxicityMeterBar.style.width = `${score}%`;
+        toxicityScoreElement.innerText = score.toFixed(2);
+    } catch (error) {
+        console.error(`Error updating toxicity UI: ${error}`);
+        // TODO: Display this error message to the user
+    }
 }

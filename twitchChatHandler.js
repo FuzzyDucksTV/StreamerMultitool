@@ -42,44 +42,47 @@ function handleChatMessage(channel, userstate, message, self) {
     // Ignore messages from the bot itself
     if (self) return;
 
-    // Send the message to the background script for analysis
-    chrome.runtime.sendMessage({ type: 'analyzeMessage', message: message });
-}
-
-// Function to monitor Twitch chat in real-time
-async function monitorTwitchChat() {
-    try {
-        // Fetch API keys
-        const keys = await fetchAPIKeys();
-
-        // Get the current Twitch channel
-        const channel = await getCurrentChannel(keys.twitchAccessToken, keys.twitchClientID);
-
-        // Create a Twitch client
-        const client = new tmi.Client({
-            options: { debug: true },
-            connection: {
-                secure: true,
-                reconnect: true
-            },
-            identity: {
-                username: keys.twitchClientID,
-                password: keys.twitchAccessToken
-            },
-            channels: [channel]
-        });
-
-        // Connect to Twitch
-        client.connect().catch(error => {
-            console.error('Error connecting to Twitch:', error);
-        });
-
-        // Listen for chat messages
-        client.on('message', handleChatMessage);
-    } catch (error) {
-        console.error('Error setting up Twitch chat monitoring:', error);
+        // Send the message to the background script for analysis
+        chrome.runtime.sendMessage({ type: 'analyzeMessage', message: message });
     }
-}
-
-// Monitor Twitch chat when the script is loaded
-monitorTwitchChat();
+    
+    // Function to monitor Twitch chat in real-time
+    async function monitorTwitchChat() {
+        try {
+            // Fetch API keys
+            const keys = await fetchAPIKeys();
+    
+            // Get the current Twitch channel
+            const channel = await getCurrentChannel(keys.twitchAccessToken, keys.twitchClientID);
+    
+            // Create a Twitch client
+            const client = new tmi.Client({
+                options: { debug: true },
+                connection: {
+                    secure: true,
+                    reconnect: true
+                },
+                identity: {
+                    username: keys.twitchClientID,
+                    password: keys.twitchAccessToken
+                },
+                channels: [channel]
+            });
+    
+            // Connect to Twitch
+            client.connect().catch(error => {
+                console.error('Error connecting to Twitch:', error);
+                // TODO: Display this error message to the user
+            });
+    
+            // Listen for chat messages
+            client.on('message', handleChatMessage);
+        } catch (error) {
+            console.error('Error setting up Twitch chat monitoring:', error);
+            // TODO: Display this error message to the user
+        }
+    }
+    
+    // Monitor Twitch chat when the script is loaded
+    monitorTwitchChat();
+    
