@@ -1,52 +1,73 @@
-const twitchClientId = '<YOUR_TWITCH_CLIENT_ID>';
-const twitchClientSecret = '<YOUR_TWITCH_CLIENT_SECRET>';
-const huggingFaceApiKey = '<YOUR_HUGGING_FACE_API_KEY>';
-import TwitchJs
+// Import required modules
+const Perspective = require('perspective-api-client');
+const axios = require('axios');
+import './twitchChatHandler.js';
 
-// Function to authenticate with the Twitch API and listen for chat messages
-async function listenToTwitchChat() {
-  const twitch = new TwitchJs({ clientId: twitchClientId, clientSecret: twitchClientSecret });
 
-  // Authenticate with Twitch API
-  await twitch.authenticate();
-  const { token } = twitch.getAuthentication();
+// Initialize Perspective API client
+const perspective = new Perspective({ apiKey: 'YOUR_PERSPECTIVE_API_KEY' });
 
-  // Join the Twitch chat
-  const { chat } = new TwitchJs({ token, username: 'AI_StreamMate' });
-  await chat.connect();
-  await chat.join('<TWITCH_CHANNEL_NAME>');
+// Variables for Twitch API
+let twitchClientID = 'YOUR_TWITCH_CLIENT_ID';
+let twitchAccessToken = 'YOUR_TWITCH_ACCESS_TOKEN';
 
-  // Listen for chat messages
-  chat.on('PRIVMSG', handleTwitchChatMessage);
+// Variables for Netlify API
+let netlifyAPIKey = 'YOUR_NETLIFY_API_KEY';
+
+// Function to fetch API keys from Netlify
+async function fetchAPIKeys() {
+    try {
+        const response = await axios.get('https://api.netlify.com/api/v1/keys', {
+            headers: {
+                'Authorization': `Bearer ${netlifyAPIKey}`
+            }
+        });
+        twitchClientID = response.data.twitchClientID;
+        twitchAccessToken = response.data.twitchAccessToken;
+    } catch (error) {
+        console.error('Error fetching API keys from Netlify:', error);
+    }
 }
 
-// Function to handle incoming Twitch chat messages
-async function handleTwitchChatMessage(message) {
-  const sentimentScore = await analyzeSentiment(message.message);
-
-  // Update the sentiment meter and track top/bottom commenters
-  chrome.runtime.sendMessage({ type: 'updateSentiment', score: sentimentScore, user: message.user });
-
-  // Detect toxic messages and notify the user
-  if (sentimentScore < -0.5) {
-    chrome.runtime.sendMessage({ type: 'toxicMessage', user: message.user, message: message.message });
-  }
-}
-
-// Function to analyze the sentiment of a chat message using Hugging Face API
+// Function to analyze sentiment of a message
 async function analyzeSentiment(message) {
-  const response = await fetch('https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${huggingFaceApiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ inputs: message })
-  });
-
-  const responseData = await response.json();
-  const sentimentScore = responseData.scores[0];
-  return sentimentScore;
+    try {
+        const result = await perspective.analyze({ text: message });
+        return result.attributeScores.TOXICITY.summaryScore.value;
+    } catch (error) {
+        console.error('Error analyzing sentiment:', error);
+    }
 }
 
-listenToTwitchChat();
+// Function to handle Twitch chat messages
+function handleChatMessage(message) {
+    const sentimentScore = analyzeSentiment(message);
+    // Update sentiment score in the UI
+    chrome.runtime.sendMessage({ type: 'updateSentiment', score: sentimentScore });
+    // If the message is toxic, initiate user-defined actions
+    if (sentimentScore > 0.5) {
+        chrome.storage.sync.get(['responseOptions'], function (data) {
+            if (data.responseOptions.notifyModerators) {
+                // Notify chat moderators
+            }
+            if (data.responseOptions.sendPrivateMessage) {
+                // Send a private message to the sender
+            }
+            if (data.responseOptions.browserNotification) {
+                // Send a browser notification
+            }
+        });
+    }
+}
+
+// Function to monitor Twitch chat in real-time
+function monitorTwitchChat() {
+    // Connect to Twitch chat using the Twitch API
+    // Handle incoming chat messages with handleChatMessage()
+}
+
+// Fetch API keys when the extension is loaded
+fetchAPIKeys();
+
+// Monitor Twitch chat when the extension is loaded
+monitorTwitchChat();

@@ -1,51 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>AI StreamMate</title>
-</head>
-<body>
-  <header>
-    <h1>AI StreamMate</h1>
-    <div class="theme-switch">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI StreamMate</title>
+    <link id="theme-style" rel="stylesheet" href="light.css">
+  </head>
+  <body>
+    <div id="twitchAuth">
+      <button id="loginButton">Login with Twitch</button>
+    </div>  
+    <header>
+      <h1>AI StreamMate</h1>
       <label class="switch">
-        <input type="checkbox" id="themeToggle" />
+        <input id="themeToggle" type="checkbox">
         <span class="slider round"></span>
       </label>
-      <span>Dark Mode</span>
-    </div>
-  </header>
-  <main>
-    <h2>AI Features</h2>
-    <div class="feature-list">
-      <label>
-        <input type="checkbox" id="highlightReel" />
-        AI-Powered Highlight Reel
-      </label>
-      <label>
-        <input type="checkbox" id="audienceEngagement" />
-        Smart Audience Engagement
-      </label>
-      <label>
-        <input type="checkbox" id="streamTitles" />
-        AI-Generated Stream Titles
-      </label>
-      <label>
-        <input type="checkbox" id="performanceAnalysis" />
-        In-Game Performance Analysis
-      </label>
-      <label>
-        <input type="checkbox" id="overlayCustomization" />
-        AI-Assisted Overlay Customization
-      </label>
-    </div>
-
-    <button id="loginWithTwitch">Login with Twitch</button>
-    <p class="message">First make sure you log in to your Twitch account above.</p>
-    <button id="save">Save</button>
-  </main>
-  <script src="popup.js"></script>
-</body>
+    </header>
+    <main>
+      <section class="feature">
+        <header>
+          <h2>Sentiment Analysis</h2>
+          <label class="switch">
+            <input id="sentimentToggle" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </header>
+        <button id="sentimentButton">Options</button>
+        <div id="sentimentOptions" style="display: none;">
+          <div class="option">
+            <label for="showTopScorers">Show top 3 sentiment scorers:</label>
+            <input type="checkbox" id="showTopScorers" name="showTopScorers">
+          </div>
+          
+          <div class="option">
+            <label for="showBottomScorers">Show bottom 3 sentiment scorers:</label>
+            <input type="checkbox" id="showBottomScorers" name="showBottomScorers">
+          </div>
+          
+          <div class="option">
+            <label for="leaderboardDuration">Leaderboard duration:</label>
+            <select id="leaderboardDuration" name="leaderboardDuration">
+              <option value="all">All time</option>
+              <option value="month">1 month</option>
+              <option value="week">1 week</option>
+            </select>
+          </div>
+          <label>
+            Sensitivity:
+            <input id="sentimentSensitivity" type="range" min="1" max="100">
+            <span id="sentimentSensitivityValue"></span>
+          </label>
+        </div>
+      </section>
+      <section class="feature">
+        <header>
+          <h2>Toxicity Detection</h2>
+          <label class="switch">
+            <input id="toxicityToggle" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </header>
+        <button id="toxicityButton">Options</button>
+        <div id="toxicityOptions" style="display: none;">
+          <label>
+            Custom Message:
+            <input id="toxicityMessage" type="text" placeholder="Enter custom message">
+          </label>
+          <label>
+            Notify Mods:
+            <input id="toxicityModNotification" type="checkbox">
+          </label>
+          <label>
+            Self Notification:
+            <input id="toxicitySelfNotification" type="checkbox">
+          </label>
+          <label>
+            Custom Mod Message:
+            <input id="toxicityModMessage" type="text" placeholder="Enter custom message">
+          </label>
+          <label>
+            Custom Self Message:
+            <input id="toxicitySelfMessage" type="text" placeholder="Enter custom message">
+          </label>
+        </div>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
 </html>

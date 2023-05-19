@@ -1,3 +1,0 @@
-Flask==2.1.1
-transformers==4.13.0
-twitch-python==2.5.0

@@ -1,0 +1,33 @@
+{
+  "version": "3",
+  "manifest_version": 3,
+  "name": "Twitch Chat Sentiment Analysis",
+  "description": "This extension provides sentiment analysis for Twitch chat.",
+  "version": "1.0",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html",
+    "default_title": "Sentiment Analysis"
+  },
+  "permissions": [
+    "storage",
+    "identity",
+    "https://api.twitch.tv/*",
+    "https://api-inference.huggingface.co/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "web_accessible_resources": [
+    "sentiment-popup.html",
+    "sentiment-popup.js"
+  ]
+}
