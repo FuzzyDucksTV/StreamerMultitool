@@ -24,9 +24,6 @@ StreamMatey is a Chrome extension that monitors Twitch chat in real-time, using 
 2. Configure your preferences for sentiment analysis and toxicity detection.
 3. Open a Twitch chat to start monitoring.
 
-## Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for more information.
 
 ## License
 
