@@ -1,5 +1,24 @@
 {
   "dependencies": {
+    "axios": "^1.4.0",
+    "lodash": "^4.17.21",
+    "perspective-api-client": "^3.1.0",
+    "striptags": "^3.2.0",
+    "tmi": "^2.0.0",
     "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "babel-loader": "^9.1.2",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.7.4",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "style-loader": "^3.3.3",
+    "terser-webpack-plugin": "^5.3.9",
+    "webpack": "^5.83.1",
+    "webpack-cli": "^5.1.1",
+    "webpack-dev-server": "^4.15.0"
   }
 }
