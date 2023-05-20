@@ -56,7 +56,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     if (input.type === 'checkbox') {
                         input.checked = preferences[feature].options[option];
                     } else if (input.type === 'range') {
-                        input.value = preferences[feature].options[optionfeatures[feature].sensitivityValue.textContent = input.value;
+                        input.value = preferences[feature].options[option];
+                        features[feature].sensitivityValue.textContent = input.value;
                     } else {
                         input.value = preferences[feature].options[option];
                     }
@@ -113,22 +114,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     for (let feature in features) {
         features[feature].toggle.addEventListener('change', savePreferences);
-
         for (let option in features[feature]) {
-            if (option !== 'toggle') {
-                let input = features[feature][option];
-                if(input){
-                    input.addEventListener('input', function() {
-                        if (input.type === 'range') {
-                            features[feature].sensitivityValue.textContent = input.value;
-                        }
-                        savePreferences();
-                    });
+        if (option !== 'toggle') {
+            let input = features[feature][option];
+            input.addEventListener('input', () => {
+                if (input.type === 'range') {
+                    features[feature].sensitivityValue.textContent = input.value;
                 }
-            }
+                savePreferences();
+            });
         }
     }
-});
+}   
 
 chrome.storage.sync.get(['accessToken'], function(data) {
     if (chrome.runtime.lastError) {
@@ -138,12 +135,21 @@ chrome.storage.sync.get(['accessToken'], function(data) {
     }
 
     if (data.accessToken) {
-        // If access token exists, user is logged in
         loginButton.style.display = 'none';
-
-        // Display a logout button or a message to indicate user is logged in, for example:
         let logoutButton = document.createElement('button');
         logoutButton.innerText = 'Logout';
         document.getElementById('twitchAuth').appendChild(logoutButton);
+
+        logoutButton.addEventListener('click', () => {
+            chrome.storage.sync.remove('accessToken', function() {
+                if (chrome.runtime.lastError) {
+                    console.error('Error removing access token:', chrome.runtime.lastError);
+                    displayError('Error removing access token: ' + chrome.runtime.lastError.message);
+                } else {
+                    window.location.reload();
+                }
+            });
+        });
     }
+});
 });

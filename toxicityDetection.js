@@ -3,25 +3,32 @@ const toxicityWindow = document.getElementById('toxicity-window');
 const toxicityMeterBar = document.getElementById('toxicity-meter-bar');
 const toxicityScoreElement = document.getElementById('toxicity-score');
 
+if (!toxicityWindow || !toxicityMeterBar || !toxicityScoreElement) {
+    console.error('Unable to locate required HTML elements');
+    return;
+}
+
 let toxicityScore = 0;
 
 // Function to update the Toxicity-Meter
 function updateToxicityMeter(score) {
-    if (!toxicityMeterBar || !toxicityScoreElement) {
-        console.error('Unable to locate required HTML elements');
-        return;
-    }
     toxicityMeterBar.style.width = `${score}%`;
     toxicityScoreElement.innerText = score.toFixed(2);
 }
 
 // Function to handle received messages from the background script
 function handleReceivedMessage(message) {
-    if (message.type === 'toxicityScoreUpdate') {
-        toxicityScore = message.score;
-        updateToxicityMeter(toxicityScore);
-    } else if (message.type === 'error') {
-        toxicityWindow.innerHTML = `<p>Error: ${message.error}</p>`;
+    switch (message.type) {
+        case 'toxicityScoreUpdate':
+            toxicityScore = message.score;
+            updateToxicityMeter(toxicityScore);
+            break;
+        case 'error':
+            toxicityWindow.innerHTML = `<p>Error: ${message.error}</p>`;
+            break;
+        default:
+            console.error('Received unrecognized message type:', message.type);
+            break;
     }
 }
 
